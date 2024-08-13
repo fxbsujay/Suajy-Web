@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <title>页面平滑上升</title>
+        <style>
+            .containet {
+                margin: 1em auto;
+                width: 80%;
+            }
+            .item {
+                width: 100%;
+                aspect-ratio: 2/1;
+                margin: 5vw 0;
+                border-radius: 5px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 10vw;
+                color: #fff;
+            }
+
+            .item:nth-child(1) {
+                background-color: #ffd37a;
+            }
+            .item:nth-child(2) {
+                background-color: #d3ff7a;
+            }
+            .item:nth-child(3) {
+                background-color: #7aff7a;
+            }
+            .item:nth-child(4) {
+                background-color: #7affd3;
+            }
+            .item:nth-child(5) {
+                background-color: #7ad3ff;
+            }
+            .item:nth-child(6) {
+                background-color: #7a7aff;
+            }
+            .item:nth-child(7) {
+                background-color: #d37aff;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="containet">
+            <div class="item">1</div>
+            <div class="item">2</div>
+            <div class="item">3</div>
+            <div class="item">4</div>
+            <div class="item">5</div>
+            <div class="item">6</div>
+            <div class="item">7</div>
+        </div>
+    </body>
+    
+    <script>
+        const DISTANCE = 100
+        const DURATION = 500
+        const map = new WeakMap()
+        const ob = new IntersectionObserver(entries =>{
+            for(const entry of entries) {
+                if(entry.isIntersecting) {
+                    const animation = map.get(entry.target)
+                    animation && animation.play()
+                    ob.unobserve(entry.target)
+                }
+            }
+        })
+        const items = document.getElementsByClassName('item')
+        for(let i =0; i < items.length; i++) {
+            const item = items[i]
+            const animation = item.animate([
+                { transform: `translateY(${DISTANCE}px)`, opacity: 0.5 },
+                { transform: `translateY(0)`, opacity: 1 }
+            ],{ duration: DURATION, ease: 'ease-out', fill: 'forwards'})
+            animation.pause()
+            map.set(item, animation)
+            ob.observe(item)
+        }
+    </script>
+</html>

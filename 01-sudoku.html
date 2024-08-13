@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <title>九宫格动画</title>
+        <style>
+            body {
+                background-color: #142334;
+            }
+            .containet {
+                width: 400px;
+                height: 400px;
+                margin: 0 auto;
+                margin-top: 10%;
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                grid-template-rows: 1fr 1fr 1fr;
+                gap: 10px;
+                transition: 0.5s;
+            }
+            .item:nth-child(1) {
+                background-color: #ffd37a;
+            }
+            .item:nth-child(2) {
+                background-color: #d3ff7a;
+            }
+            .item:nth-child(3) {
+                background-color: #7aff7a;
+            }
+            .item:nth-child(4) {
+                background-color: #7affd3;
+            }
+            .item:nth-child(5) {
+                background-color: #7ad3ff;
+            }
+            .item:nth-child(6) {
+                background-color: #7a7aff;
+            }
+            .item:nth-child(7) {
+                background-color: #d37aff;
+            }
+            .item:nth-child(8) {
+                background-color: #ff7ad3;
+            }
+            .item:nth-child(9) {
+                background-color: #ff7a7a;
+            }
+
+            .containet:has(.item:nth-child(1):hover) {
+                grid-template-columns: 2fr 1fr 1fr;
+                grid-template-rows: 2fr 1fr 1fr;
+            }
+            .containet:has(.item:nth-child(2):hover) {
+                grid-template-columns: 1fr 2fr 1fr;
+                grid-template-rows: 2fr 1fr 1fr;
+            }
+            .containet:has(.item:nth-child(3):hover) {
+                grid-template-columns: 1fr 1fr 2fr;
+                grid-template-rows: 2fr 1fr 1fr;
+            }
+            .containet:has(.item:nth-child(4):hover) {
+                grid-template-columns: 2fr 1fr 1fr;
+                grid-template-rows: 1fr 2fr 1fr;
+            }
+            .containet:has(.item:nth-child(5):hover) {
+                grid-template-columns: 1fr 2fr 1fr;
+                grid-template-rows: 1fr 2fr 1fr;
+            }
+            .containet:has(.item:nth-child(6):hover) {
+                grid-template-columns: 1fr 1fr 2fr;
+                grid-template-rows: 1fr 2fr 1fr;
+            }
+            .containet:has(.item:nth-child(7):hover) {
+                grid-template-columns: 2fr 1fr 1fr;
+                grid-template-rows: 1fr 1fr 2fr;
+            }
+            .containet:has(.item:nth-child(8):hover) {
+                grid-template-columns: 1fr 2fr 1fr;
+                grid-template-rows: 1fr 1fr 2fr;
+            }
+            .containet:has(.item:nth-child(9):hover) {
+                grid-template-columns: 1fr 1fr 2fr;
+                grid-template-rows: 1fr 1fr 2fr;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="containet">
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+        </div>
+    </body>
+</html>

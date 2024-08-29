@@ -6,151 +6,138 @@
         <meta name="viewport" content="width=device-width,initial-scale=1.0" />
         <title>视差滚动</title>
         <style>
-            body {
-                overflow: hidden;
-            }
             * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
             }
-            .containet {
-                width: 100%;
-                height: 100vh;
-                overflow: hidden;
-                position: relative;
+            
+            body {
+              overflow: hidden;
             }
+            
+            .scroll-container {
+              height: 100vh;
+              position: relative;
+            }
+            
             .item {
-                width: 100%;
-                height: 100%;
-                overflow: hidden;
-                position: absolute;
-                transition: 1s ease-in-out;
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              overflow: hidden;
+              transition: 1s ease-in-out;
             }
-
             .item img {
-                width: 100%;
-                height: 100vh;
-                object-fit: none;
-                object-position: 50% 50%;
+              position: absolute;
+              width: 100%;
+              height: 100vh;
+              object-fit: cover;
+              transition: 1s ease-in-out;
             }
-
-            .item.prev {
-                top: 0;
-            }
+            
+            .item.prev,
             .item.next {
-                bottom: 0;
+              z-index: 1;
+              height: 0;
             }
-
-            .item.prev img, .item.next img {
-                transition: all 1s;
-                transform: translateY(-10vw);
+            
+            .item.next {
+              bottom: 0;
             }
-            .item.prev, .item.next {
-                z-index: 2;
-                height: 0;
+            .item.next img {
+              bottom: 0;
+              transform: translateY(10%);
             }
-
-            .item.cur {
-                top: 0;
-                z-index: 1;
-                height: 100vh;
-                transform: translateY(0);
+            .item.prev img {
+              transform: translateY(-10%);
             }
-
-            .scrol-down .prev {
-                height: 100vh;
+            
+            .scroll-up .item.prev {
+              height: 100%;
             }
-            .scrol-down .prev img{
-                transform: translateY(0px);
+            .scroll-up .item.prev img {
+              transform: translateY(0);
             }
-            .scrol-down .cur {
-                transform: translateY(10vw);
+            .scroll-up .item.cur img {
+              transform: translateY(10%);
             }
-
-            .scrol-up .next {
-                height: 100vh;
+            
+            .scroll-down .item.next {
+              height: 100%;
             }
-            .scrol-up .next img{
-                transform: translateY(0vw);
+            .scroll-down .item.next img {
+              transform: translateY(0);
             }
-
-            .scrol-up .cur {
-                transform: translateY(-10vw);
+            .scroll-down .item.cur img {
+              transform: translateY(-10%);
             }
-        
 
         </style>
     </head>
 
     <body>
-        <div class="container">
+        <div class="scroll-container"></div>
         </div>
     </body>
     
     <script>
-
         const imgs = [
-            './assets/img/04-01.jpg',
-            './assets/img/04-02.jpg',
-            './assets/img/04-03.jpg',
-            './assets/img/04-04.jpg',
-            './assets/img/04-05.jpg',
+            './assets/img/04-01.jpeg',
+            './assets/img/04-02.jpeg',
+            './assets/img/04-03.jpeg',
+            './assets/img/04-04.jpeg',
+            './assets/img/04-05.jpeg',
         ]
+        
+        const scrollContainer = document.querySelector('.scroll-container');
+        let currentIndex = 0;
 
-        const container = document.querySelector('.container')
-        let curIndex = 0
-
-        function prevIndex() {
-            return curIndex === 0 ? imgs.length - 1 : curIndex - 1
-        }
-
-        function nextIndex() {
-            return curIndex === imgs.length - 1 ? 0 : curIndex + 1
-        }
-
-        function createImg(index) {
-            const img = document.createElement('img')
-            img.src = imgs[index]
-
-            const div = document.createElement('div')
-            div.className = 'item'
-            div.appendChild(img)
-            container.appendChild(div)
-            return div
+        function createItem(index) {
+          const imgUrl = imgs[index];
+          const item = document.createElement('div');
+          item.classList.add('item');
+          item.innerHTML = `<img src="${imgUrl}" />`;
+          scrollContainer.appendChild(item);
+          return item;
         }
 
         function resetElements() {
-            container.innerHTML = ''
-            const prev = prevIndex()
-            const next = nextIndex()
-
-            createImg(prev).classList.add('prev')
-            createImg(curIndex).classList.add('cur')
-            createImg(next).classList.add('next')
+          scrollContainer.innerHTML = '';
+          const prevIndex = currentIndex - 1 < 0 ? imgs.length - 1 : currentIndex - 1;
+          const nextIndex = currentIndex + 1 > imgs.length - 1 ? 0 : currentIndex + 1;
+        
+          createItem(prevIndex).classList.add('prev');
+          createItem(currentIndex).classList.add('cur');
+          createItem(nextIndex).classList.add('next');
         }
 
-       
-        resetElements()
+        resetElements();
+        let isAnimating = false;
+        scrollContainer.addEventListener('wheel', (e) => {
+          if (!e.deltaY) {
+            return;
+          }
+          if (isAnimating) {
+            return;
+          }
+          isAnimating = true;
+          if (e.deltaY > 0) {
+            scrollContainer.classList.add('scroll-down');
+            currentIndex = currentIndex + 1 > imgs.length - 1 ? 0 : currentIndex + 1;
+          } else {
+            scrollContainer.classList.add('scroll-up');
+            currentIndex = currentIndex - 1 < 0 ? imgs.length - 1 : currentIndex - 1;
+          }
+        });
 
-        
-        window.addEventListener('wheel', e => {
-            if(e.deltaY > 0) {
-                container.className = 'container scrol-down'
-            } else {
-                container.className = 'container scrol-up'
-            }
-        })
+        scrollContainer.addEventListener('transitionend', () => {
+          isAnimating = false;
+          scrollContainer.classList.remove('scroll-down');
+          scrollContainer.classList.remove('scroll-up');
+          resetElements();
+        });
 
-        container.addEventListener('transitionend', () => {
-            if(container.classList.contains('scrol-down')) {
-                curIndex = prevIndex()
-            } else if(container.classList.contains('scrol-up')) {
-                curIndex = nextIndex()
-            }
-            container.className = 'container'
-            resetElements()
-        })
 
 
 
